@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const alumnoController_1 = require("../../adapters/controllers/alumnoController");
+const maestrosController_1 = require("../../adapters/controllers/maestrosController");
+const multerConfig_1 = require("../../infrastructure/config/multerConfig");
+const storageController_1 = require("../../adapters/controllers/storageController");
+const diContainer_1 = require("../../infrastructure/diContainer");
+const storageService_1 = require("../../application/services/storageService");
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+const storageService = new storageService_1.StorageService(diContainer_1.storageRepository);
+const storageController = new storageController_1.StorageController(storageService);
+app.post('/upload', multerConfig_1.upload.single('file'), storageController.upload);
+app.post('/api/alumnos', alumnoController_1.createAlumno);
+app.get('/api/alumnos/:id', alumnoController_1.getAlumnoById);
+app.get('/api/alumnos', alumnoController_1.getAllAlumnos);
+app.put('/api/alumnos/:id', alumnoController_1.updateAlumno);
+app.delete('/api/alumnos/:id', alumnoController_1.deleteAlumnoById);
+app.post('/api/maestroses', maestrosController_1.createMaestros);
+app.get('/api/maestroses/:id', maestrosController_1.getMaestrosById);
+app.get('/api/maestroses', maestrosController_1.getAllMaestroses);
+app.put('/api/maestroses/:id', maestrosController_1.updateMaestros);
+app.delete('/api/maestroses/:id', maestrosController_1.deleteMaestrosById);
+exports.default = app;
